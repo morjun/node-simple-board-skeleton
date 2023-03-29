@@ -4,6 +4,9 @@ const session = require('express-session');
 
 const { errorHandler } = require('./lib/error-handler');
 
+const router = require('./controller');
+// 하위의 index.js 자동 import
+
 const { MODE, SESSION_SECRET } = process.env;
 
 const app = express();
@@ -16,11 +19,14 @@ app.use('/', express.static(`${__dirname}/../public`));
 app.use(morgan(MODE !== 'prod' ? 'dev' : 'combined'));
 app.use(express.urlencoded({ extended: true }));
 
+
 app.use(session({
 	secret: SESSION_SECRET,
 	resave: false,
 	saveUninitialized: true,
 }));
+
+app.use('/',router);
 
 app.use(errorHandler);
 
